@@ -114,3 +114,54 @@ SpatialPolygonsRescale(layout.north.arrow(),
                        offset = locator(1), 
                        scale = 400,
                        plot.grid = FALSE)
+
+
+
+#---------------------------------------------------#
+# Chunk 2: 3.1.3 Degrees in Axes Lables and Ref Grid
+#---------------------------------------------------#
+
+# grid lines long/lat grids, these are non-straight lines
+# which is accompalished by generating a grid for unprojected data
+# then projecting it, and then plotting over the map shown
+install.packages("maptools")
+install.packages("maps")
+install.packages("rgdal")
+library(maptools)
+library(maps)
+library(rgdal)
+
+world <- map("world", interior = FALSE, xlim = c(-179, 179),
+    ylim = c(-89, 89), plot = FALSE)
+
+# convert map objects to suitable one defined in sp package
+world_p <- pruneMap(world, xlim = c(-179, 179))
+
+llCRS <- CRS("+proj=longlat +ellps=WGS84")
+world_sp <- map2SpatialLines(world_p, proj4string = llCRS)
+proj_new <- CRS("+proj=moll")
+
+world_proj <- spTransform(world_sp, proj_new)
+world_grid <- gridlines(world_sp, easts = c(-179, seq(-150, 150, 50), 179.5),
+          norths = seq(-75, 75, 15), 
+          ndiscr = 100)
+
+world_grid_proj <- spTransform(world_grid, proj_new)
+
+at_sp <- gridat(world_sp, easts = 0, norths = seq(-75, 75, 15),
+       offset = 0.3)
+
+at_proj <- spTransform(at_sp, proj_new)
+
+plot(world_proj, col = "grey60")
+plot(world_grid_proj, add = TRUE, lty = 3, col = "grey70")
+
+text(coordinates(at_proj), pos = at_proj$pos,
+     offset = at_proj$offset, 
+     labels = parse(text = as.character(at_proj$labels)), 
+     cex = 0.6)
+
+
+
+
+
