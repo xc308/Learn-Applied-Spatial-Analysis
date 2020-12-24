@@ -68,3 +68,36 @@ class(zn.idw.log) # SpatialPixelsDataFrame
 spplot(zn.idw[c("var1.pred", "var1.pred.log")], cuts = 9)
 
 
+class(meuse) # SpatialPointsDataFrame
+spplot(meuse[c("cadmium", "copper", "lead", "zinc")])
+
+meuse$cadmium
+meuse$copper
+meuse$lead
+meuse$zinc
+
+
+#-----------------------------------------------#
+# 3.2.2 Plotting points, lines, polygons, grids
+#------------------------------------------------#
+
+install.packages("maptools")
+library(maptools)
+
+data("meuse.grid") # dataframe
+coordinates(meuse.grid) <- c("x", "y") # spatialPointsDataFrame
+
+head(meuse.grid[, ], 3)
+meuse.grid <- as(meuse.grid, "SpatialPixelsDataFrame")
+
+im <- as.image.SpatialGridDataFrame(meuse.grid["dist"])
+# as.image.Spatial.. Convert to image data structure
+
+contourLines(im) # calculate the contour lines
+spcl <- ContourLines2SLDF(contourLines(im))
+# Formal Class SpatialLinesDataFrame
+
+spplot(spcl)
+
+
+
