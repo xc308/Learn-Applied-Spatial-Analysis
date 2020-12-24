@@ -163,5 +163,51 @@ text(coordinates(at_proj), pos = at_proj$pos,
 
 
 
+#------------------------------------------#
+# 3.1.4 Plot size, plotting area, map scale, 
+#       and mulitple plots 
+#-------------------------------------------#
+
+# figure size : the total size of fig including axes, titles
+# plotting size: the area where the data are actually plotted
+
+# to get and set the figure size in inches:
+par("pin")
+# [1] 2.895833 2.320833
+
+par(pin = c(4, 4))
+
+# to enlarge the plotting window, 
+# 1st close the current plotting device
+# 2nd re-open it by specifying size
+dev.off()
+quartz(width = 10, height = 10)
+
+# data area is by default a 4% margin on each side
+# to prevent this, set par(xaxs = "i") and par(yaxs = "i")
+
+pin <- par("pin") # 8.76 8.16
+
+bbox(meuse) # a matrix 
+# to calculate the difference of x and y axis
+dxy <- apply(bbox(meuse), 1, diff)
+ratio <- dxy[1] / dxy[2] # delta x / delta y
+
+par(pin = c(ratio * pin[2], pin[2]), 
+    xaxs = "i", yaxs = "i")
+plot(meuse, pch = 1)
+box()
+
+
+## create more than one map in a single figure
+## divide the figure region into subregions
+par(mfrow = c(2, 3))
+
+
+## map scale is the ratio between the length one unit 
+# on the map and one unit in the real world
+
+
+
 
 
