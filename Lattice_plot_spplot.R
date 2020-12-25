@@ -126,7 +126,7 @@ scale_bar <- list("SpatialPolygonsRescale", layout.scale.bar(),
 
 txt1 <- list("sp.text", c(180200, 329950), "0")
 txt2 <- list("sp.text", c(181200, 329950), "1 km")
-pts <- list("sp.points", meuse, pch = 4, cex = 0.5, col = "black")
+pts <- list("sp.points", meuse, pch = 4, cex = 0.3, col = "black")
 
 # a list of layout items be the argument of sp.layout
 meuse.layout <- list(river, north_arrow, scale_bar, txt1, txt2, pts)
@@ -136,6 +136,69 @@ spplot(zn.idw[c("var1.pred")], sp.layout = meuse.layout)
 #zn.idw$var1.pred
 
 
+#-------------------------------#
+# 3.4.2 Arranging Panel Layout #
+#--------------------------------#
+spplot(zn.idw[c("var1.pred")], sp.layout = meuse.layout,
+       layout = c(3, 3), skip = c(F, T, T, F, F, T, F, F, F) )
+
+layout = c(3, 3)
+
+spplot(meuse[c("cadmium", "copper", "lead", "zinc")],
+       sp.layout = meuse.layout,
+       layout = c(2, 2), 
+       skip = c(F, F, F, F))
+
+
+#-----------------------------#
+# 3.3 ggplot2 and latticExtra #
+#-----------------------------#
+
+# ggplot takes an object and try to convert it 
+# to a data.frame using method fortify
+
+install.packages("ggplot2")
+library(ggplot2)
+
+methods(fortify)
+# [18] fortify.SpatialLinesDataFrame*   
+# [19] fortify.SpatialPolygons*         
+# [20] fortify.SpatialPolygonsDataFrame*
+# [14] fortify.Polygon*                 
+# [15] fortify.Polygons* 
+# [12] fortify.map*
+# [9] fortify.Line*                    
+# [10] fortify.Lines*
+
+# so for SpatialPointsDataFrame objects such as meuse
+# we need to do conversion dataframe ourselves
+m <- as(meuse, "data.frame")
+head(m)
+
+ggplot(m, aes(x, y)) + geom_point() + coord_equal()
+# aes: specifiy which variables to be plotted on x and y axis
+# geom_point(): dictates the plot shall be a scatter plot
+# cood_equal(): make sure that units along the x-axis equal those along y-axis
+
+## gg : grammar of graphics 
+
+
+# latticeExtra also uses + operator
+# as objects returned by spplot are trellis/lattice/grid objects 
+
+install.packages("latticeExtra")
+library(latticeExtra)
+
+p <- spplot(meuse["zinc"])
+m <- SpatialPolygonsDataFrame(meuse.pol, data.frame(col = 1), match.ID = FALSE)
+head(m, 3)
+l <- spplot(m) # list
+l 
+l + p
+p + l
+
+## rasterVis further uses latticExtra to improve vis of spatial data
+# esp raster maps 
 
 
 
