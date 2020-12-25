@@ -101,3 +101,43 @@ spplot(spcl)
 
 
 
+#-----------------------------------------------#
+# 3.2.3 Adding ref and layout elements to plots
+#------------------------------------------------#
+
+# spplot takes a single argument , splayout
+# to annotate plots with lines, points, poly, text, combinations 
+# sp.layout contains either a single layout item
+# or a list of layout items
+
+# a single layout item is a list of object
+# its 1st component is the name of the layout function: sp.points, sp.polygons, sp.lines, sp.text
+# followed by the object to be plotted
+# then the arguments to adjust, color, symbols, size etc
+
+# example
+river <- list("sp.polygons", meuse.pol)
+north_arrow <- list("SpatialPolygonsRescale", layout.north.arrow(),
+     offset = c(178750, 332500), scale = 400)
+
+scale_bar <- list("SpatialPolygonsRescale", layout.scale.bar(),
+     offset = c(180200, 329800), scale = 1000, 
+     fill = c("transparent", "black"))
+
+txt1 <- list("sp.text", c(180200, 329950), "0")
+txt2 <- list("sp.text", c(181200, 329950), "1 km")
+pts <- list("sp.points", meuse, pch = 4, cex = 0.5, col = "black")
+
+# a list of layout items be the argument of sp.layout
+meuse.layout <- list(river, north_arrow, scale_bar, txt1, txt2, pts)
+
+class(meuse.grid) # SpatialPointsDataFrame
+spplot(zn.idw[c("var1.pred")], sp.layout = meuse.layout)
+#zn.idw$var1.pred
+
+
+
+
+
+
+
