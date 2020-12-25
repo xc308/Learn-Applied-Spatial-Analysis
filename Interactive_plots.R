@@ -51,3 +51,16 @@ print(pt)
 
 pt.sp <- SpatialPoints(cbind(pt$x, pt$y))
 over(pt.sp, nc)
+
+
+#------------------------------------------------#
+# 3.4.2 Interacting with spplot and lattice plots
+#------------------------------------------------#
+
+# To select points with spplot
+ids <- spplot(meuse, "zinc", identify = TRUE)
+ids # show the points selected and return its row numbers
+
+spplot.locator(type = "p")
+# [1] 101.8125 102.0329
+
